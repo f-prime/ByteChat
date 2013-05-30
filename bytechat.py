@@ -8,6 +8,7 @@ import json
 class ByteChat:
 
     nodes = {}
+    id_ = ""
 
     def __init__(self):
         self.cmds = {
@@ -17,13 +18,14 @@ class ByteChat:
         self.port = 27017
         self.nick = "Max00355"
         self.room = "HF"
-        self.id = uuid.uuid4().hex
         self.sock = socket.socket()
         self.broker_ip = "5.44.233.7"
         self.broker_port = 5002
         self.broker = (self.broker_ip, self.broker_port)
 
     def main(self):
+        global id_
+        id_ = uuid.uuid4().hex
         self.get_nodes()
         self.send_checkin()
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -34,11 +36,12 @@ class ByteChat:
             threading.Thread(target=self.handle, args=(obj,conn[0])).start()
     def get_nodes(self):
         global nodes
+        global id_
         sock = socket.socket()
         try:
             sock.settimeout(2)
             sock.connect((self.broker))
-            sock.send(json.dumps({"port":self.port, "id":self.id}))
+            sock.send(json.dumps({"port":self.port, "id":id_}))
             data = sock.recv(102400)
             if data:
                 nodes = json.loads(data)
@@ -48,21 +51,22 @@ class ByteChat:
             self.get_nodes()
     def send_checkin(self):
         global nodes
+        global id_
         for x in nodes:
             sock = socket.socket()
             try:
                 sock.settimeout(2)
                 sock.connect(tuple(nodes[x]))
-                sock.send(json.dumps({"cmd":"checkin", "port":self.port, "id":self.id}))
+                sock.send(json.dumps({"cmd":"checkin", "port":self.port, "id":id_}))
                 sock.close()
             except Exception, error:
                 continue
     def checkin(self, data, ip):
         global nodes
-        id = data['id']
+        id_ = data['id']
         port = data['port']
         nodes['id'] = (ip, port)
-        print id, "checked in"
+        print id_, "checked in"
 
     def handle(self, obj, ip):
         data = obj.recv(1024)
@@ -80,18 +84,20 @@ class ByteChat:
 
     def send(self, msg):
         global nodes
+        global id_
         for x in nodes:
             sock = socket.socket()
             try:
                 sock.settimeout(2)
                 sock.connect(tuple(nodes[x]))
-                sock.send(json.dumps({"cmd":"msg", "message":msg, "from":self.nick, "room":self.room, "id":self.id}))
+                sock.send(json.dumps({"cmd":"msg", "message":msg, "from":self.nick, "room":self.room, "id":id_}))
                 sock.close()
             except Exception, error:
                 pass
     def msg(self, data, ip):
+        global id_
         try:
-            if data['id'] != self.id and data['room'] == self.room:
+            if data['id'] != id_ and data['room'] == self.room:
                 print data['from']+": "+data['message']
         except Exception, error:
             pass
