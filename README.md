@@ -6,5 +6,5 @@ A Peer to Peer chat protocol.
 Version
 -------
 
-0.0.1
+0.0.2
 
