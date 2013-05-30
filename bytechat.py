@@ -4,6 +4,7 @@ import uuid
 import time
 import json
 
+__version__ = 0.0.1
 
 class ByteChat:
 
