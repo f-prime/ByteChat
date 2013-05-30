@@ -15,8 +15,8 @@ class ByteChat:
                 "msg":self.msg
                 }
         self.port = 27017
-        self.nick = "Test: "
-        self.room = "room"
+        self.nick = "Max00355"
+        self.room = "HF"
         self.id = uuid.uuid4().hex
         self.sock = socket.socket()
         self.broker_ip = "5.44.233.7"
@@ -74,6 +74,8 @@ class ByteChat:
     def prompt(self):
         while True:
             msg = raw_input(self.nick+": ")
+            if msg == "":
+                continue
             self.send(msg)
 
     def send(self, msg):
