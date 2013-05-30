@@ -4,7 +4,7 @@ import uuid
 import time
 import json
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 class ByteChat:
 
@@ -94,7 +94,7 @@ class ByteChat:
                 sock.send(json.dumps({"cmd":"msg", "message":msg, "from":self.nick, "room":self.room, "id":id_}))
                 sock.close()
             except Exception, error:
-                pass
+                del nodes[x]
     def msg(self, data, ip):
         global id_
         try:
