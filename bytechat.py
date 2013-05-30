@@ -4,21 +4,21 @@ import uuid
 import time
 import json
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 class ByteChat:
 
     nodes = {}
     id_ = ""
 
-    def __init__(self):
+    def __init__(self, nick, port, room):
         self.cmds = {
                 "checkin":self.checkin,
                 "msg":self.msg
                 }
-        self.port = 27017
-        self.nick = "Max00355"
-        self.room = "HF"
+        self.port = port
+        self.nick = nick
+        self.room = room
         self.sock = socket.socket()
         self.broker_ip = "5.44.233.7"
         self.broker_port = 5002
@@ -104,5 +104,6 @@ class ByteChat:
             pass
 
 if __name__ == "__main__":
-    threading.Thread(target=ByteChat().prompt).start()
-    ByteChat().main()
+    byte = ByteChat(raw_input("Nickname: "), input("Port: "), raw_input("Room: "))
+    threading.Thread(target=byte.prompt).start()
+    byte.main()
