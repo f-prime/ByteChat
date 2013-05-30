@@ -81,7 +81,7 @@ class ByteChat:
             msg = raw_input(self.nick+": ")
             if msg == "":
                 continue
-            self.send(msg)
+            threading.Thread(target=self.send, args=(msg,)).start()
 
     def send(self, msg):
         global nodes
