@@ -3,8 +3,9 @@ import threading
 import uuid
 import time
 import json
+import random
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 class ByteChat:
 
@@ -86,6 +87,7 @@ class ByteChat:
     def send(self, msg):
         global nodes
         global id_
+        delete = []
         for x in nodes:
             sock = socket.socket()
             try:
@@ -94,7 +96,9 @@ class ByteChat:
                 sock.send(json.dumps({"cmd":"msg", "message":msg, "from":self.nick, "room":self.room, "id":id_}))
                 sock.close()
             except Exception, error:
-                del nodes[x]
+                delete.append(x)
+        for x in delete:
+            del nodes[x]
     def msg(self, data, ip):
         global id_
         try:
